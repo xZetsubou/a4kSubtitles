@@ -712,6 +712,8 @@ def test_subsource():
     # download
     item = search.results[0]
 
+    print(search.results)
+
     params = {
         'action': 'download',
         'service_name': 'subsource',
