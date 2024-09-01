@@ -2,7 +2,7 @@ name: SubSource
 on:
   push:
     branches:
-      - master
+      - add_subsource_tests
     paths:
       - '.github/workflows/cron-tests-subsource.yml'
   schedule:
