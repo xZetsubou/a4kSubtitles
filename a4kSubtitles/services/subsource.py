@@ -29,26 +29,32 @@ def __extract_season_episode(core, text):
     return (None, None)
 
 def build_search_requests(core, service_name, meta):
-    name = (meta.title if meta.is_movie else meta.tvshow).replace(" & ", " and ")
-    name = core.re.sub("[^a-zA-Z0-9- ]+", "", name).replace(" ", "-").lower()
+    def get_movie(response):
+        results = response.json()
+        found = results.get("found", [])
+        movie_name = ""
+        
+        for res in found:
+            if res.get("type", "Movie") == "Movie" and meta.is_tvshow:
+                continue
+            movie_name = res["linkName"]
+            break
 
+        params = { "movieName": movie_name, "langs": meta.languages }
+        if meta.is_tvshow:
+            params["season"] = "season-" + meta.season
+        return {"method": "POST", "url": __getMovie, "data": params}
+
+    name = (meta.title if meta.is_movie else meta.tvshow)
     year = meta.tvshow_year if meta.is_tvshow else meta.year
 
-    params = { "movieName": name, "langs": meta.languages }
-
-    params_with_year = {
-        "movieName": name + "-" + year,
-        "langs": meta.languages,
-    }
-
-    if meta.is_tvshow:
-        params["season"] = "season-" + meta.season
-        params_with_year["season"] = "season-" + meta.season
-
-    request = {"method": "POST", "url": __getMovie, "data": params}
-    request2 = {"method": "POST", "url": __getMovie, "data": params_with_year}
-
-    return [request, request2]
+    params = {"query": name + " " + year}
+    request = { "method": "POST", 
+                "url": __search, 
+                "data": params, 
+                "next": lambda gm: get_movie(gm)
+            }
+    return [request]
 
 
 def parse_search_response(core, service_name, meta, response):
@@ -59,7 +65,6 @@ def parse_search_response(core, service_name, meta, response):
         return []
 
     service = core.services[service_name]
-    core.logger.error("Subsource results: %s " % (results))
 
     if "subs" not in results:
         return []
