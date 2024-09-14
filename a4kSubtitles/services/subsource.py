@@ -49,11 +49,12 @@ def build_search_requests(core, service_name, meta):
     year = meta.tvshow_year if meta.is_tvshow else meta.year
 
     params = {"query": name + " " + year}
-    request = {"method": "POST",
-                "url": __search,
-                "data": params,
-                "next": lambda gm: get_movie(gm)
-                }
+    request = {
+        "method": "POST",
+        "url": __search,
+        "data": params,
+        "next": lambda gm: get_movie(gm)
+        }
     return [request]
 
 
@@ -71,7 +72,7 @@ def parse_search_response(core, service_name, meta, response):
 
     movie_details = results.get("movie", {})
 
-    altname = movie_details.get("altName")
+    # altname = movie_details.get("altName")
     full_name = movie_details.get("fullName", "")
 
     def map_result(result):
@@ -83,7 +84,6 @@ def parse_search_response(core, service_name, meta, response):
 
         rating = result.get("rating", 0)
         lang_code = core.utils.get_lang_id(lang, core.kodi.xbmc.ISO_639_1)
-
 
         if meta.is_tvshow:
             subtitle_season = core.re.search(r'Season\s(\d+)', full_name)
