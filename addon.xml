@@ -27,6 +27,10 @@ Supports: OpenSubtitles, BSPlayer, Podnadpisi.NET, SubDL, Addic7ed
             <screenshot>screenshot-03.png</screenshot>
         </assets>
         <news>
+[v3.16.0]:
+  * Fix subtitles international characters encoding
+  * Add SubSource
+
 [v3.15.0]:
   * Remove Subscene
   * Add SubDL
