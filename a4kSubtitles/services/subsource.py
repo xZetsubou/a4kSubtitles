@@ -25,7 +25,7 @@ def __extract_season_episode(core, text):
         # Assuming the last number in the fallback matches is the episode number
         episode_number = fallback_matches[-1]
         return (None, episode_number)
-    
+
     return (None, None)
 
 def build_search_requests(core, service_name, meta):
