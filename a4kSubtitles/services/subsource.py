@@ -10,17 +10,17 @@ __download = __api + "downloadSub/"
 def __extract_season_episode(core, text):
     pattern = core.re.compile(r'(?:S(\d+)|Season\s*(\d+))[^E]*?(?:E(\d+)|Episode\s*(\d+))', core.re.IGNORECASE)
     match = pattern.search(text)
-    
+
     if match:
         # Extract season and episode numbers from groups
         season = match.group(1) or match.group(2)
         episode = match.group(3) or match.group(4)
         return (season, episode)
-    
+
     # If no matches found, attempt to capture episode-like sequences
     fallback_pattern = core.re.compile(r'\bE?P?(\d{2,5})\b', core.re.IGNORECASE)
     fallback_matches = fallback_pattern.findall(text)
-    
+
     if fallback_matches:
         # Assuming the last number in the fallback matches is the episode number
         episode_number = fallback_matches[-1]
@@ -33,14 +33,14 @@ def build_search_requests(core, service_name, meta):
         results = response.json()
         found = results.get("found", [])
         movie_name = ""
-        
+
         for res in found:
             if res.get("type", "Movie") == "Movie" and meta.is_tvshow:
                 continue
             movie_name = res["linkName"]
             break
 
-        params = { "movieName": movie_name, "langs": meta.languages }
+        params = {"movieName": movie_name, "langs": meta.languages}
         if meta.is_tvshow:
             params["season"] = "season-" + meta.season
         return {"method": "POST", "url": __getMovie, "data": params}
@@ -68,7 +68,7 @@ def parse_search_response(core, service_name, meta, response):
 
     if "subs" not in results:
         return []
-    
+
     movie_details = results.get("movie", {})
 
     altname = movie_details.get("altName")
