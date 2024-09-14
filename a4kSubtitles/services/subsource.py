@@ -84,8 +84,6 @@ def parse_search_response(core, service_name, meta, response):
         rating = result.get("rating", 0)
         lang_code = core.utils.get_lang_id(lang, core.kodi.xbmc.ISO_639_1)
 
-        if altname:
-            name = altname + " | " + name 
 
         if meta.is_tvshow:
             subtitle_season = core.re.search(r'Season\s(\d+)', full_name)
