@@ -54,7 +54,7 @@ def build_search_requests(core, service_name, meta):
         "url": __search,
         "data": params,
         "next": lambda gm: get_movie(gm)
-        }
+    }
     return [request]
 
 
