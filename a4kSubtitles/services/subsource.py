@@ -49,11 +49,11 @@ def build_search_requests(core, service_name, meta):
     year = meta.tvshow_year if meta.is_tvshow else meta.year
 
     params = {"query": name + " " + year}
-    request = { "method": "POST", 
-                "url": __search, 
-                "data": params, 
+    request = {"method": "POST",
+                "url": __search,
+                "data": params,
                 "next": lambda gm: get_movie(gm)
-            }
+                }
     return [request]
 
 
