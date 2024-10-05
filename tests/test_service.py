@@ -19,6 +19,13 @@ def __mock_monitor(api):
         api.core.kodi.xbmc.Monitor = default
     return restore
 
+def __mock_is_playing_video(api, mock_data):
+    default = api.core.kodi.xbmc.player().isPlayingVideo
+    api.core.kodi.xbmc.player = lambda v: mock_data.get(v, False)
+    def restore():
+        api.core.kodi.xbmc.player = default
+    return restore
+
 def __mock_get_cond_visibility(api, mock_data):
     default = api.core.kodi.xbmc.getCondVisibility
     api.core.kodi.xbmc.getCondVisibility = lambda v: mock_data.get(v, False)
@@ -63,10 +70,12 @@ def test_service_start_when_disabled():
         'general.auto_search': 'false',
     })
     get_cond_visibility_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc, 'getCondVisibility')
+    isplayervideo_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc.Player(), 'isPlayingVideo')
 
     service.start(a4ksubtitles_api)
 
     restore()
+    isplayervideo_spy()
     get_cond_visibility_spy.restore()
 
     assert get_cond_visibility_spy.call_count == 0
@@ -78,10 +87,12 @@ def test_service_start_when_enabled():
         'general.auto_search': 'true',
     })
     get_cond_visibility_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc, 'getCondVisibility')
+    isplayervideo_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc.Player(), 'isPlayingVideo')
 
     service.start(a4ksubtitles_api)
 
     restore()
+    isplayervideo_spy()
     get_cond_visibility_spy.restore()
 
     assert get_cond_visibility_spy.call_count > 0
@@ -103,10 +114,12 @@ def test_service_when_video_does_not_have_subtitles():
     })
 
     executebuiltin_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc, 'executebuiltin')
+    isplayervideo_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc.Player(), 'isPlayingVideo')
 
     service.start(a4ksubtitles_api)
 
     restore()
+    isplayervideo_spy()
     restore_get_cond_visibility()
     restore_get_info_label()
     executebuiltin_spy.restore()
@@ -130,10 +143,12 @@ def test_service_when_video_has_disabled_subtitles():
     })
 
     executebuiltin_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc, 'executebuiltin')
+    isplayervideo_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc.Player(), 'isPlayingVideo')
 
     service.start(a4ksubtitles_api)
 
     restore()
+    isplayervideo_spy()
     restore_get_cond_visibility()
     restore_get_info_label()
     executebuiltin_spy.restore()
@@ -157,10 +172,12 @@ def test_service_when_does_not_have_video_duration():
     })
 
     executebuiltin_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc, 'executebuiltin')
+    isplayervideo_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc.Player(), 'isPlayingVideo')
 
     service.start(a4ksubtitles_api)
 
     restore()
+    isplayervideo_spy()
     restore_get_cond_visibility()
     restore_get_info_label()
     executebuiltin_spy.restore()
