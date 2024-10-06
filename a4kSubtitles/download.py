@@ -173,7 +173,7 @@ def download(core, params):
     __postprocess(core, filepath, lang_code)
 
     if core.api_mode_enabled:
-        __copy_sub_local(core, filepath)
+        # __copy_sub_local(core, filepath)
         return filepath
 
     listitem = core.kodi.xbmcgui.ListItem(label=filepath, offscreen=True)
