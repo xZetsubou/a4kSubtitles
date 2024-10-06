@@ -130,6 +130,9 @@ def __postprocess(core, filepath, lang_code):
 
 def __copy_sub_local(core, subfile):
     # Copy the subfile to local.
+    if core.os.getenv('A4KSUBTITLES_TESTRUN') == 'true':
+        return
+
     media_name = core.os.path.splitext(core.os.path.basename(core.kodi.xbmc.getInfoLabel('Player.Filename')))[0]
     sub_name, lang_code, extension = core.os.path.basename(subfile).rsplit(".", 2)
     file_dest, folder_dest = None, None
@@ -173,7 +176,7 @@ def download(core, params):
     __postprocess(core, filepath, lang_code)
 
     if core.api_mode_enabled:
-        # __copy_sub_local(core, filepath)
+        __copy_sub_local(core, filepath)
         return filepath
 
     listitem = core.kodi.xbmcgui.ListItem(label=filepath, offscreen=True)
