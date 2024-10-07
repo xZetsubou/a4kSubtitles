@@ -78,14 +78,14 @@ def test_service_start_when_video_playing():
     restore_isplayingvideo()
     get_infolabel_spy.restore()
 
-    get_infolabel_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc, 'getInfoLabel')
-    restore_isplayingvideo = __mock_is_playingvideo(a4ksubtitles_api, True)
+    get_infolabel_spy2 = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc, 'getInfoLabel')
+    restore_isplayingvideo2 = __mock_is_playingvideo(a4ksubtitles_api, True)
 
     service.start(a4ksubtitles_api)
-    assert get_infolabel_spy.call_count == 1
+    assert get_infolabel_spy2.call_count == 1
 
     restore()
-    restore_isplayingvideo()
+    restore_isplayingvideo2()
     get_infolabel_spy.restore()
 
 def test_service_start_when_disabled():
