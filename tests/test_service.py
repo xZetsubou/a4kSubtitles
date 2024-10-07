@@ -19,6 +19,13 @@ def __mock_monitor(api):
         api.core.kodi.xbmc.Monitor = default
     return restore
 
+def __mock_is_playingvideo(api, mock_state):
+    default = api.core.kodi.xbmc.player().isPlayingVideo
+    api.core.kodi.xbmc.player().isPlayingVideo = mock_state
+    def restore():
+        api.core.kodi.xbmc.player().isPlayingVideo = default
+    return restore
+
 def __mock_get_cond_visibility(api, mock_data):
     default = api.core.kodi.xbmc.getCondVisibility
     api.core.kodi.xbmc.getCondVisibility = lambda v: mock_data.get(v, False)
@@ -63,12 +70,11 @@ def test_service_start_when_disabled():
         'general.auto_search': 'false',
     })
     get_cond_visibility_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc, 'getCondVisibility')
-    isplayervideo_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc.Player(), 'isPlayingVideo')
+    __mock_is_playingvideo(a4ksubtitles_api, True)
 
     service.start(a4ksubtitles_api)
 
     restore()
-    isplayervideo_spy.restore()
     get_cond_visibility_spy.restore()
 
     assert get_cond_visibility_spy.call_count == 0
@@ -80,7 +86,6 @@ def test_service_start_when_enabled():
         'general.auto_search': 'true',
     })
     get_cond_visibility_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc, 'getCondVisibility')
-    isplayervideo_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc.Player(), 'isPlayingVideo')
 
     service.start(a4ksubtitles_api)
 
@@ -97,7 +102,6 @@ def test_service_when_video_does_not_have_subtitles():
         'general.auto_search': 'true',
     })
     restore_get_cond_visibility = __mock_get_cond_visibility(a4ksubtitles_api, {
-        'VideoPlayer.Content(episodes)': True,
         'Player.HasDuration': True,
         'VideoPlayer.HasSubtitles': False,
         'VideoPlayer.SubtitlesEnabled': False,
@@ -107,12 +111,10 @@ def test_service_when_video_does_not_have_subtitles():
     })
 
     executebuiltin_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc, 'executebuiltin')
-    isplayervideo_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc.Player(), 'isPlayingVideo')
 
     service.start(a4ksubtitles_api)
 
     restore()
-    isplayervideo_spy.restore()
     restore_get_cond_visibility()
     restore_get_info_label()
     executebuiltin_spy.restore()
@@ -126,7 +128,6 @@ def test_service_when_video_has_disabled_subtitles():
         'general.auto_search': 'true',
     })
     restore_get_cond_visibility = __mock_get_cond_visibility(a4ksubtitles_api, {
-        'VideoPlayer.Content(movies)': True,
         'Player.HasDuration': True,
         'VideoPlayer.HasSubtitles': True,
         'VideoPlayer.SubtitlesEnabled': False,
@@ -136,12 +137,10 @@ def test_service_when_video_has_disabled_subtitles():
     })
 
     executebuiltin_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc, 'executebuiltin')
-    isplayervideo_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc.Player(), 'isPlayingVideo')
 
     service.start(a4ksubtitles_api)
 
     restore()
-    isplayervideo_spy.restore()
     restore_get_cond_visibility()
     restore_get_info_label()
     executebuiltin_spy.restore()
@@ -155,7 +154,6 @@ def test_service_when_does_not_have_video_duration():
         'general.auto_search': 'true',
     })
     restore_get_cond_visibility = __mock_get_cond_visibility(a4ksubtitles_api, {
-        'VideoPlayer.Content(movies)': True,
         'Player.HasDuration': False,
         'VideoPlayer.HasSubtitles': False,
         'VideoPlayer.SubtitlesEnabled': False,
@@ -165,7 +163,6 @@ def test_service_when_does_not_have_video_duration():
     })
 
     executebuiltin_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc, 'executebuiltin')
-    isplayervideo_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc.Player(), 'isPlayingVideo')
 
     service.start(a4ksubtitles_api)
 
@@ -185,7 +182,6 @@ def test_service_auto_download():
         'general.auto_download': 'true',
     })
     restore_get_cond_visibility = __mock_get_cond_visibility(a4ksubtitles_api, {
-        'VideoPlayer.Content(movies)': True,
         'Player.HasDuration': True,
         'VideoPlayer.HasSubtitles': False,
         'VideoPlayer.SubtitlesEnabled': False,
