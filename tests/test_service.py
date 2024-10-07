@@ -71,7 +71,7 @@ def test_service_start_when_disabled():
         'general.auto_search': 'false',
     })
     get_cond_visibility_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc, 'getCondVisibility')
-    utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc.player(), 'isPlayingVideo')
+    a4ksubtitles_api.core.kodi.xbmc.Player().getPlayingFile = lambda: True
 
     service.start(a4ksubtitles_api)
 
