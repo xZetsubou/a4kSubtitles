@@ -64,29 +64,25 @@ def __mock(api, settings):
     return restore
 
 def test_service_start_when_video_playing():
-    a4ksubtitles_api = api.A4kSubtitlesApi({'kodi': True})
+    def test_playing_video(state):
+        a4ksubtitles_api = api.A4kSubtitlesApi({'kodi': True})
 
-    restore = __mock(a4ksubtitles_api, {
-        'general.auto_search': 'True',
-    })
-    get_infolabel_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc, 'getInfoLabel')
-    restore_isplayingvideo = __mock_is_playingvideo(a4ksubtitles_api, False)
+        restore = __mock(a4ksubtitles_api, {
+            'general.auto_search': 'True',
+        })
+        get_infolabel_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc, 'getInfoLabel')
+        restore_isplayingvideo = __mock_is_playingvideo(a4ksubtitles_api, state)
 
-    service.start(a4ksubtitles_api)
+        service.start(a4ksubtitles_api)
 
-    assert get_infolabel_spy.call_count == 0
-    restore_isplayingvideo()
-    get_infolabel_spy.restore()
+        restore()
+        restore_isplayingvideo()
+        get_infolabel_spy.restore()
 
-    get_infolabel_spy2 = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc, 'getInfoLabel')
-    restore_isplayingvideo2 = __mock_is_playingvideo(a4ksubtitles_api, True)
+        return get_infolabel_spy.call_count
 
-    service.start(a4ksubtitles_api)
-    assert get_infolabel_spy2.call_count == 1
-
-    restore()
-    restore_isplayingvideo2()
-    get_infolabel_spy.restore()
+    assert test_playing_video(True) == 4
+    assert test_playing_video(False) == 5
 
 def test_service_start_when_disabled():
     a4ksubtitles_api = api.A4kSubtitlesApi({'kodi': True})
