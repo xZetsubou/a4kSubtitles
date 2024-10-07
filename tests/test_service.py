@@ -20,7 +20,7 @@ def __mock_monitor(api):
     return restore
 
 def __mock_is_playingvideo(api, mock_state):
-    utils.spy_fn(api.core.kodi.xbmc, 'player')
+    utils.spy_fn(api.core.kodi.xbmc.player(), 'isPlayingVideo')
     # default = api.core.kodi.xbmc.player().isPlayingVideo
     # api.core.kodi.xbmc.player().isPlayingVideo = lambda: mock_state
     # def restore():
@@ -71,7 +71,7 @@ def test_service_start_when_disabled():
         'general.auto_search': 'false',
     })
     get_cond_visibility_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc, 'getCondVisibility')
-    set_playingvideo = __mock_is_playingvideo(a4ksubtitles_api, True)
+    utils.spy_fn(api.core.kodi.xbmc.player(), 'isPlayingVideo')
 
     service.start(a4ksubtitles_api)
 
