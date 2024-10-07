@@ -70,12 +70,12 @@ def test_service_start_when_disabled():
         'general.auto_search': 'false',
     })
     get_cond_visibility_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc, 'getCondVisibility')
-    is_playingvido = __mock_is_playingvideo(a4ksubtitles_api, True)
+    restore_isplayingvideo = __mock_is_playingvideo(a4ksubtitles_api, True)
 
     service.start(a4ksubtitles_api)
 
     restore()
-    is_playingvido.restore()
+    restore_isplayingvideo()
     get_cond_visibility_spy.restore()
 
     assert get_cond_visibility_spy.call_count == 0
