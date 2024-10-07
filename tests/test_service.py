@@ -90,7 +90,6 @@ def test_service_start_when_enabled():
     service.start(a4ksubtitles_api)
 
     restore()
-    isplayervideo_spy.restore()
     get_cond_visibility_spy.restore()
 
     assert get_cond_visibility_spy.call_count > 0
@@ -167,7 +166,6 @@ def test_service_when_does_not_have_video_duration():
     service.start(a4ksubtitles_api)
 
     restore()
-    isplayervideo_spy.restore()
     restore_get_cond_visibility()
     restore_get_info_label()
     executebuiltin_spy.restore()
