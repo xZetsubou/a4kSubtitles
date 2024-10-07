@@ -75,6 +75,7 @@ def test_service_start_when_disabled():
     service.start(a4ksubtitles_api)
 
     restore()
+    is_playingvido.restore()
     get_cond_visibility_spy.restore()
 
     assert get_cond_visibility_spy.call_count == 0
