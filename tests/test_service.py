@@ -20,10 +20,10 @@ def __mock_monitor(api):
     return restore
 
 def __mock_is_playingvideo(api, mock_state):
-    default = api.core.kodi.xbmc.player().isPlayingVideo
-    api.core.kodi.xbmc.player().isPlayingVideo = mock_state
+    default = api.core.kodi.xbmc.playere().isPlayingVideo
+    api.core.kodi.xbmc.playere().isPlayingVideo = lambda: mock_state
     def restore():
-        api.core.kodi.xbmc.player().isPlayingVideo = default
+        api.core.kodi.xbmc.playere().isPlayingVideo = default
     return restore
 
 def __mock_get_cond_visibility(api, mock_data):
