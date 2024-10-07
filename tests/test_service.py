@@ -63,7 +63,7 @@ def __mock(api, settings):
         restore_settings()
     return restore
 
-def test_service_start_when_no_video_playing():
+def test_service_start_when_video_playing():
     a4ksubtitles_api = api.A4kSubtitlesApi({'kodi': True})
 
     restore = __mock(a4ksubtitles_api, {
@@ -74,11 +74,16 @@ def test_service_start_when_no_video_playing():
 
     service.start(a4ksubtitles_api)
 
+    assert get_infolabel_spy.call_count == 0
+
+    restore_isplayingvideo = __mock_is_playingvideo(a4ksubtitles_api, True)
+
+    service.start(a4ksubtitles_api)
+    assert get_infolabel_spy.call_count == 1
+
     restore()
     restore_isplayingvideo()
     get_infolabel_spy.restore()
-
-    assert get_infolabel_spy.call_count == 0
 
 def test_service_start_when_disabled():
     a4ksubtitles_api = api.A4kSubtitlesApi({'kodi': True})
