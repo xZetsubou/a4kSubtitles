@@ -76,7 +76,9 @@ def test_service_start_when_video_playing():
 
     assert get_infolabel_spy.call_count == 0
     restore_isplayingvideo()
+    get_infolabel_spy.restore()
 
+    get_infolabel_spy = utils.spy_fn(a4ksubtitles_api.core.kodi.xbmc, 'getInfoLabel')
     restore_isplayingvideo = __mock_is_playingvideo(a4ksubtitles_api, True)
 
     service.start(a4ksubtitles_api)
