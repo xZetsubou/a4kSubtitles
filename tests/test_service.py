@@ -75,6 +75,7 @@ def test_service_start_when_video_playing():
     service.start(a4ksubtitles_api)
 
     assert get_infolabel_spy.call_count == 0
+    restore_isplayingvideo()
 
     restore_isplayingvideo = __mock_is_playingvideo(a4ksubtitles_api, True)
 
