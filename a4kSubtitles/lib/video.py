@@ -320,10 +320,8 @@ def __get_basic_info():
     if meta.season == '' or meta.episode == '':
         filename_info = utils.extract_season_episode(meta.filename, zfill=0)
         filename_path_info = utils.extract_season_episode(filename_and_path, zfill=0)
-        meta.season = meta.season or filename_info.season or filename_path_info.season
-        meta.episode = meta.episode or filename_info.episode or filename_path_info.episode
-        import warnings
-        warnings.warn("The meta season: %s and episode: %s" % (meta.season, meta.episode))
+        meta.season = meta.season or filename_path_info.season or filename_info.season
+        meta.episode = meta.episode or filename_path_info.episode or filename_info.episode
 
     return meta
 
