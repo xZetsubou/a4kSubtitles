@@ -322,6 +322,16 @@ def __get_basic_info():
         meta.season = meta.season or filename_info.season
         meta.episode = meta.episode or filename_info.episode
 
+    if meta.season == '':
+        regex_result = re.search(r'.*season=(\d{1,}).*', filename_and_path, re.IGNORECASE)
+        if regex_result:
+            meta.season = regex_result.group(1)
+
+    if meta.episode == '':
+        regex_result = re.search(r'.*episode=(\d{1,}).*', filename_and_path, re.IGNORECASE)
+        if regex_result:
+            meta.episode = regex_result.group(1)
+
     return meta
 
 def __is_imdb_id(id: str) -> bool:

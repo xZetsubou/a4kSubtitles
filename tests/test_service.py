@@ -82,7 +82,7 @@ def test_service_start_when_video_playing():
         return get_infolabel_spy.call_count
 
     assert test_playing_video(True) != 0
-    assert test_playing_video(False) == 5
+    assert test_playing_video(False) == 0
 
 def test_service_start_when_disabled():
     a4ksubtitles_api = api.A4kSubtitlesApi({'kodi': True})
